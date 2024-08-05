@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from decouple import config
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,8 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'book',
     'rest_framework',
-    'graphene_django',
-    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
+    'graphene_django'
 ]
 GRAPHENE = {
     'SCHEMA': 'book.schema.schema' 
@@ -67,24 +67,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
-
-AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-GRAPHENE = {
-    'SCHEMA': 'book.schema.schema',
-    'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ],
-}
-
-GRAPHQL_JWT = {
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': timedelta(minutes=5),
-    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
-}
 
 ROOT_URLCONF = 'library.urls'
 
@@ -114,9 +96,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'library',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'postgres_db',  
+        'USER': config('POSTGRES_DB'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST':config('DB_HOST'),
         'PORT': '5432'
     }
 }
